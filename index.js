@@ -79,7 +79,6 @@ server.put("/api/users/:id", async (req, res) => {
   console.log("id:", id);
   console.log("name: ", name);
   console.log("bio: ", bio);
-  // const changes = req.body;
   const updateUser = await db.update(id, { name, bio });
 
   if (!updateUser) {
@@ -93,29 +92,15 @@ server.put("/api/users/:id", async (req, res) => {
   }
 
   try {
-    res
-      .status(200)
-      .json({ message: `The user with id ${req.params.id} was updated` });
+    if (updateUser) {
+      const userById = await db.findById(id);
+      return res.status(200).json(userById);
+    }
   } catch (error) {
     res
       .status(500)
       .json({ errorMessage: "The user information could not be modified." });
   }
-
-  // const { id } = req.params;
-  // const changes = req.body;
-
-  // db.update(id, changes)
-  //   .then(updated => {
-  //     if (updated) {
-  //       res.status(200).json({ success: true, updated });
-  //     } else {
-  //       res.status(404).json({ success: false, message: "id not found" });
-  //     }
-  //   })
-  //   .catch(err => {
-  //     res.status(500).json({ success: false, err });
-  //   });
 });
 
 // DELETE deletes user by ID
