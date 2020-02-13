@@ -1,5 +1,5 @@
 const express = require("express");
-const Users = require("./data/db");
+const db = require("./data/db");
 
 const server = express();
 
@@ -8,12 +8,14 @@ server.get("/", (req, res) => {
 });
 
 server.get("/api/users", async (req, res) => {
-  const users = await Users.find();
+  const users = await db.find();
   console.log(users);
   if (users) {
     return res.status(200).json(users);
   }
 });
+
+// server.post("/api/users", async (req, ))
 
 const port = 8080;
 
