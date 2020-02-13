@@ -79,9 +79,9 @@ server.put("/api/users/:id", async (req, res) => {
   console.log("id:", id);
   console.log("name: ", name);
   console.log("bio: ", bio);
-  const updateUser = await db.update(id, { name, bio });
+  // const updateUser = await db.update(id, { name, bio });
 
-  if (!updateUser) {
+  if (!id) {
     return res
       .status(404)
       .json({ message: `The user with id ${req.params.id} does not exist.` });
@@ -92,9 +92,10 @@ server.put("/api/users/:id", async (req, res) => {
   }
 
   try {
-    if (updateUser) {
-      const userById = await db.findById(id);
-      return res.status(200).json(userById);
+    if (id) {
+      await db.update(id, { name, bio });
+      const updatedUser = await db.findById(id);
+      return res.status(200).json(updatedUser);
     }
   } catch (error) {
     res
