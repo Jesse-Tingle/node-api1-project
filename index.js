@@ -55,16 +55,12 @@ server.post("/api/users", async (req, res) => {
   }
 
   try {
-    // const newUser = await db.insert({name, bio});
-    // res.json(newUser);
-    res.json(await db.insert({ name, bio }));
+    res.status(201).json(await db.insert({ name, bio }));
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        err,
-        errorMessage: "There was an error while saving the user to the database"
-      });
+    res.status(500).json({
+      err,
+      errorMessage: "There was an error while saving the user to the database"
+    });
   }
 });
 
