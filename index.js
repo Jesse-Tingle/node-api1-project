@@ -89,19 +89,36 @@ server.post("/api/users", async (req, res) => {
 });
 
 // DELETE deletes user by ID
-server.delete("/api/users/:id", (req, res) => {
-  const { id } = req.params;
+server.delete("/api/users/:id", async (req, res) => {
+  const removedUser = await db.remove(req.params.id);
 
-  db.remove(id)
-    .then(deletedUser => {
-      res.json(deletedUser);
-    })
-    .catch(err => {
-      res.status(500).json({
-        err: err,
-        message: "failed to delete user"
-      });
+  if (!removedUser) {
+    return res
+      .status(404)
+      .json({ message: "The user with the specified ID does not exist." });
+  }
+
+  try {
+    res
+      .status(200)
+      .json({ message: `User with id ${req.params.id} was deleted` });
+  } catch (error) {
+    res.status(500).json({
+      err,
+      errorMessage: "The user could not be removed"
     });
+  }
+
+  // db.remove(id)
+  //   .then(deletedUser => {
+  //     res.json(deletedUser);
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json({
+  //       err: err,
+  //       message: "failed to delete user"
+  //     });
+  //   });
 });
 
 const port = 8080;
