@@ -49,24 +49,6 @@ server.get("/api/users/:id", async (req, res) => {
   }
 });
 
-// PUT updates user by ID
-server.put("/api/users/:id", (req, res) => {
-  const { id } = req.params;
-  const changes = req.body;
-
-  db.update(id, changes)
-    .then(updated => {
-      if (updated) {
-        res.status(200).json({ success: true, updated });
-      } else {
-        res.status(404).json({ success: false, message: "id not found" });
-      }
-    })
-    .catch(err => {
-      res.status(500).json({ success: false, err });
-    });
-});
-
 // POST adds new user
 server.post("/api/users", async (req, res) => {
   // const newUser = (await req.body.name, req.body.bio);
@@ -86,6 +68,24 @@ server.post("/api/users", async (req, res) => {
       errorMessage: "There was an error while saving the user to the database"
     });
   }
+});
+
+// PUT updates user by ID
+server.put("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
+  db.update(id, changes)
+    .then(updated => {
+      if (updated) {
+        res.status(200).json({ success: true, updated });
+      } else {
+        res.status(404).json({ success: false, message: "id not found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ success: false, err });
+    });
 });
 
 // DELETE deletes user by ID
