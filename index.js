@@ -108,17 +108,6 @@ server.delete("/api/users/:id", async (req, res) => {
       errorMessage: "The user could not be removed"
     });
   }
-
-  // db.remove(id)
-  //   .then(deletedUser => {
-  //     res.json(deletedUser);
-  //   })
-  //   .catch(err => {
-  //     res.status(500).json({
-  //       err: err,
-  //       message: "failed to delete user"
-  //     });
-  //   });
 });
 
 const port = 8080;
