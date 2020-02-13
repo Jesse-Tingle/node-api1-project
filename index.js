@@ -28,6 +28,26 @@ server.get("/api/users", async (req, res) => {
 });
 
 // GET gets users by ID
+server.get("/api/users/:id", async (req, res) => {
+  const userId = await db.findById(req.params.id);
+
+  // const user = await db.findById(id)
+
+  if (!userId) {
+    return res.status(404).json({
+      message: `The user with id ${req.params.id} does not exist.`
+    });
+  }
+
+  try {
+    res.status(200).json(userId);
+  } catch (error) {
+    res.status(500).json({
+      err,
+      errorMessage: "The user information could not be retrieved."
+    });
+  }
+});
 
 // PUT updates user by ID
 server.put("/api/users/:id", (req, res) => {
