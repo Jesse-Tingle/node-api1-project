@@ -20,6 +20,10 @@ server.get("/api/users", async (req, res) => {
   console.log(users);
   if (users) {
     return res.status(200).json(users);
+  } else {
+    res
+      .status(500)
+      .json({ errorMessage: "The users information could not be retrieved." });
   }
 });
 
