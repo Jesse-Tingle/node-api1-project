@@ -45,14 +45,26 @@ server.put("/api/users/:id", (req, res) => {
 
 // POST adds new user
 server.post("/api/users", async (req, res) => {
-  const newUser = await req.body;
-  db.insert(newUser);
-  if (newUser) {
-    res.status(201).json(newUser);
-  } else {
-    return res.status(500).json({
-      message: "failed to create new user"
+  // const newUser = (await req.body.name, req.body.bio);
+  const { name, bio } = req.body;
+
+  if (!name || !bio) {
+    return res.status(400).json({
+      errorMessage: "Please provide name and bio for the user."
     });
+  }
+
+  try {
+    // const newUser = await db.insert({name, bio});
+    // res.json(newUser);
+    res.json(await db.insert({ name, bio }));
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        err,
+        errorMessage: "There was an error while saving the user to the database"
+      });
   }
 });
 
