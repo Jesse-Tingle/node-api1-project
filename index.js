@@ -5,24 +5,11 @@ const express = require("express");
 const db = require("./data/db");
 
 const server = express();
+server.use(express.json());
 
 server.get("/", (req, res) => {
   res.json({ message: "hello, world" });
 });
-
-// // GET hubs
-// server.get("/users", (req, res) => {
-//   db.find()
-//     .then(users => {
-//       console.log(users);
-//       res.json(users);
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         err: err
-//       });
-//     });
-// });
 
 server.get("/api/users", async (req, res) => {
   const users = await db.find();
@@ -32,8 +19,9 @@ server.get("/api/users", async (req, res) => {
   }
 });
 
-server.post("/api/users", async (req, res) => {
+server.post("/api/users", (req, res) => {
   const newUser = req.body;
+  console.log("newUser", newUser);
   db.insert(newUser)
     .then(user => {
       res.status(201).json(user);
