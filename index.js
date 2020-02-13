@@ -53,6 +53,8 @@ server.get("/api/users/:id", async (req, res) => {
 server.post("/api/users", async (req, res) => {
   // const newUser = (await req.body.name, req.body.bio);
   const { name, bio } = req.body;
+  console.log("name: ", name);
+  console.log("bio", bio);
 
   if (!name || !bio) {
     return res.status(400).json({
@@ -71,21 +73,49 @@ server.post("/api/users", async (req, res) => {
 });
 
 // PUT updates user by ID
-server.put("/api/users/:id", (req, res) => {
+server.put("/api/users/:id", async (req, res) => {
   const { id } = req.params;
-  const changes = req.body;
+  const { name, bio } = req.body;
+  console.log("id:", id);
+  console.log("name: ", name);
+  console.log("bio: ", bio);
+  // const changes = req.body;
+  const updateUser = await db.update(id, { name, bio });
 
-  db.update(id, changes)
-    .then(updated => {
-      if (updated) {
-        res.status(200).json({ success: true, updated });
-      } else {
-        res.status(404).json({ success: false, message: "id not found" });
-      }
-    })
-    .catch(err => {
-      res.status(500).json({ success: false, err });
-    });
+  if (!updateUser) {
+    return res
+      .status(404)
+      .json({ message: `The user with id ${req.params.id} does not exist.` });
+  } else if (!name || !bio) {
+    return res
+      .status(400)
+      .json({ errorMessage: "Please provide name and bio for the user." });
+  }
+
+  try {
+    res
+      .status(200)
+      .json({ message: `The user with id ${req.params.id} was updated` });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ errorMessage: "The user information could not be modified." });
+  }
+
+  // const { id } = req.params;
+  // const changes = req.body;
+
+  // db.update(id, changes)
+  //   .then(updated => {
+  //     if (updated) {
+  //       res.status(200).json({ success: true, updated });
+  //     } else {
+  //       res.status(404).json({ success: false, message: "id not found" });
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json({ success: false, err });
+  //   });
 });
 
 // DELETE deletes user by ID
