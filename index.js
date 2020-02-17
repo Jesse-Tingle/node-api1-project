@@ -30,10 +30,11 @@ server.get("/api/users", async (req, res) => {
 // GET gets users by ID
 server.get("/api/users/:id", async (req, res) => {
   const userId = await db.findById(req.params.id);
-
+  console.log("userID", userId);
   // const user = await db.findById(id)
 
   if (!userId) {
+    console.log("User ID error");
     return res.status(404).json({
       message: `The user with id ${req.params.id} does not exist.`
     });
